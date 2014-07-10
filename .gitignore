@@ -1,0 +1,7 @@
+bin/
+build/
+.buildlog
+pubspec.lock
+packages
+.*.un~
+etc.txt

@@ -1,0 +1,9 @@
+name: flare
+version: 0.0.1
+description: A versatile content rendering system.
+dependencies:
+  barback: any
+  markdown: any
+  mustache: any
+dev_dependencies:
+  unittest: any
