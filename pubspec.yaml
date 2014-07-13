@@ -1,9 +1,10 @@
 name: flare
-version: 0.0.1
-description: A versatile content rendering system.
+version: 0.0.2
+description: Flare is a set of Barback transformers that collectively implement a versatile content generation system.
 dependencies:
   barback: any
   markdown: any
   mustache: any
+  yaml: any
 dev_dependencies:
   unittest: any
