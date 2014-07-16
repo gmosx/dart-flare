@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:barback/barback.dart';
 
 class CleanupTransformer extends Transformer {
+  static final PRIVATE_RE = new RegExp(r'/_');
   static final INC_RE = new RegExp(r'.inc.');
   static final META_RE = new RegExp(r'.yaml$');
 
@@ -21,6 +22,8 @@ class CleanupTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     return new Future.value(
+//        id.path.startsWith('web/packages') ||
+        PRIVATE_RE.hasMatch(id.path) ||
         INC_RE.hasMatch(id.path) ||
         META_RE.hasMatch(id.path));
   }
