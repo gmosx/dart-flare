@@ -1,3 +1,9 @@
 library flare;
 
-part 'src/front_matter.dart';
+import 'dart:io';
+import 'dart:collection';
+
+import 'package:barback/barback.dart';
+import 'package:yaml/yaml.dart' show loadYaml, YamlMap;
+
+part 'src/metadata.dart';

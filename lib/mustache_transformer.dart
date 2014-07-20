@@ -2,9 +2,9 @@ library flare.mustache_transformer;
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert' show JSON;
 
 import 'package:barback/barback.dart';
-import 'package:yaml/yaml.dart' show loadYaml, YamlMap;
 import 'package:mustache/mustache.dart' as mustache;
 
 // TODO: add a setting to point to yaml file with default data.
@@ -23,11 +23,18 @@ class MustacheTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      final template = mustache.parse(content);
-      final newContent = template.renderString(_getTemplateData(asset.id), htmlEscapeValues: false);
-      final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-      transform.consumePrimary();
-      transform.addOutput(new Asset.fromString(newId, newContent));
+      final metaPath = '${asset.id.path.split(".").first}.meta.json';
+      // Metadata is generated for all content files (.html, .md)
+      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.meta.json')).then((meta) {
+        return meta.readAsString().then((json) {
+          final data = JSON.decode(json);
+          final template = mustache.parse(content);
+          final newContent = template.renderString(data, htmlEscapeValues: false);
+          final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+          transform.consumePrimary();
+          transform.addOutput(new Asset.fromString(newId, newContent));
+        });
+      });
     });
   }
 
@@ -35,21 +42,5 @@ class MustacheTransformer extends Transformer {
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
     return new Future.value(_TMPL_RE.hasMatch(id.path));
-  }
-
-  Map _getTemplateData(AssetId id) {
-    // Default template data.
-    var data = {
-      'date': new DateTime.now().toString()
-    };
-
-    final metaPath = '${id.path.split(".").first}.yaml';
-    final metaFile = new File(metaPath);
-
-    if (metaFile.existsSync()) {
-      data.addAll(loadYaml(metaFile.readAsStringSync()));
-    }
-
-    return data;
   }
 }
