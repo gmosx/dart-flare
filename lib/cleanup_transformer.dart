@@ -7,7 +7,7 @@ import 'package:barback/barback.dart';
 class CleanupTransformer extends Transformer {
   static final PRIVATE_RE = new RegExp(r'/_');
   static final INC_RE = new RegExp(r'.inc.');
-  static final META_RE = new RegExp(r'.yaml$');
+  static final META_RE = new RegExp(r'(.yaml$)|(.meta.json$)');
 
   final BarbackSettings _settings;
 

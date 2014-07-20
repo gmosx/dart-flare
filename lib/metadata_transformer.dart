@@ -1,6 +1,5 @@
 library flare.mustache_transformer;
 
-// TODO: rename to MetadataTransformer.
 // TODO: embed metadata.dart here.
 // TODO: handle original input form both yaml and json.
 
@@ -10,13 +9,13 @@ import 'dart:async';
 import 'package:barback/barback.dart';
 import 'package:flare/flare.dart';
 
-class FrontMatterTransformer extends Transformer {
+class MetadataTransformer extends Transformer {
   static const String METADATA_EXTENSION = '.meta.json';
-  static final _TEXT_RE = new RegExp(r'(.html$)|(.md$)');
+  static final _CONTENT_RE = new RegExp(r'(.html$)|(.md$)');
 
   final BarbackSettings _settings;
 
-  FrontMatterTransformer.asPlugin(this._settings) {
+  MetadataTransformer.asPlugin(this._settings) {
   }
 
   @override
@@ -38,6 +37,6 @@ class FrontMatterTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
-    return new Future.value(_TEXT_RE.hasMatch(id.path));
+    return new Future.value(_CONTENT_RE.hasMatch(id.path));
   }
 }
