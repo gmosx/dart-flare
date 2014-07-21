@@ -1,6 +1,5 @@
 library flare.mustache_transformer;
 
-import 'dart:io';
 import 'dart:async';
 import 'dart:convert' show JSON;
 

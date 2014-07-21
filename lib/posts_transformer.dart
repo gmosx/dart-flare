@@ -43,8 +43,4 @@ class PostsTransformer extends Transformer {
         id.path == _layoutPath ||
         id.path.startsWith(_rootPath));
   }
-
-  _buildPostsModel() {
-    // TODO: implement me!
-  }
 }
