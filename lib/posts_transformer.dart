@@ -2,6 +2,7 @@ library flare.posts_transformer;
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert' show JSON;
 
 import 'package:barback/barback.dart';
 import 'package:mustache/mustache.dart' as mustache;
@@ -30,9 +31,15 @@ class PostsTransformer extends Transformer {
       transform.consumePrimary();
     } else {
       return asset.readAsString().then((content) {
-        final newContent = _template.renderString({'content': content}, htmlEscapeValues: false);
-        transform.consumePrimary();
-        transform.addOutput(new Asset.fromString(asset.id, newContent));
+        return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.meta.json')).then((meta) {
+          return meta.readAsString().then((json) {
+            final data = JSON.decode(json);
+            data['content'] = content;
+            final newContent = _template.renderString(data, htmlEscapeValues: false);
+            transform.consumePrimary();
+            transform.addOutput(new Asset.fromString(asset.id, newContent));
+          });
+        });
       });
     }
   }
@@ -41,6 +48,6 @@ class PostsTransformer extends Transformer {
   Future<bool> isPrimary(AssetId id) {
     return new Future.value(
         id.path == _layoutPath ||
-        id.path.startsWith(_rootPath));
+        (id.path.startsWith(_rootPath) && id.path.endsWith('.html')));
   }
 }

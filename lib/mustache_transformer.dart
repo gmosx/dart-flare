@@ -22,7 +22,6 @@ class MustacheTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      final metaPath = '${asset.id.path.split(".").first}.meta.json';
       // Metadata is generated for all content files (.html, .md)
       return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.meta.json')).then((meta) {
         return meta.readAsString().then((json) {
