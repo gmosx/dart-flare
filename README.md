@@ -2,16 +2,17 @@ Flare
 =====
 
 Flare is a collection of Barback transformers for content generation.
-The typical use case is the static generation of web sites.
+The typical use case is the static generation of web sites (e.g. similar
+to Jekyll, etc).
 
 
-To do
------
+Status
+------
 
-* strip packages dir from build directory
-* support simple layout
-* support markdown content
-* support article-style content
+Flare is currently just an experiment. The goal is to validate the hypothesis
+that Barback is versatile enough to support an extensible static content generation
+system. I am publishing this as a package in the hope to receive feedback 
+from the community. Pull requests will not hurt either ;-)
 
  
 Links
