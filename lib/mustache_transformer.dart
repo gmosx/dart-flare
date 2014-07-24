@@ -6,6 +6,8 @@ import 'dart:convert' show JSON;
 import 'package:barback/barback.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
+import 'package:flare/flare.dart';
+
 // TODO: add a setting to point to yaml file with default data.
 
 /// A Barback [Transformer] that evaluates Mustache template files.
@@ -23,7 +25,7 @@ class MustacheTransformer extends Transformer {
 
     return asset.readAsString().then((content) {
       // Metadata is generated for all content files (.html, .md)
-      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.meta.json')).then((meta) {
+      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
         return meta.readAsString().then((json) {
           final data = JSON.decode(json);
           final template = mustache.parse(content);

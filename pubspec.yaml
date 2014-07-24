@@ -4,9 +4,10 @@ author: George Moschovitis <george.moschovitis@gmail.com>
 description: Flare is a set of Barback transformers that collectively implement a versatile content generation system.
 homepage: https://github.com/gmosx/dart-flare
 dependencies:
-  barback: ">=0.14.0+3 <0.15.0"
-  markdown: ">=0.7.0 <0.8.0"
-  mustache: ">=0.1.8 <0.2.0"
-  yaml: ">=1.1.1 <2.0.0"
+  barback: any
+  markdown: '>=0.7.0 <0.8.0'
+  mustache: '>=0.1.8 <0.2.0'
+  quiver: any
+  yaml: '>=1.1.1 <2.0.0'
 dev_dependencies:
   unittest: any

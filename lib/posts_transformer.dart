@@ -7,6 +7,8 @@ import 'dart:convert' show JSON;
 import 'package:barback/barback.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
+import 'package:flare/flare.dart';
+
 // TODO: Add error-handling code.
 // TODO: build a model of the posts, for index, categories, etc.
 
@@ -28,10 +30,10 @@ class PostsTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     if (asset.id.path == _layoutPath) {
-      transform.consumePrimary();
+      transform.consumePrimary(); // TODO: remove in cleanup transformer?
     } else {
       return asset.readAsString().then((content) {
-        return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.meta.json')).then((meta) {
+        return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
           return meta.readAsString().then((json) {
             final data = JSON.decode(json);
             data['content'] = content;
