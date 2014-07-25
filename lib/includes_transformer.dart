@@ -12,7 +12,8 @@ import 'package:barback/barback.dart';
 /// files.
 class IncludesTransformer extends Transformer {
   static final TMPL_RE = new RegExp(r'.tmpl.');
-  static final INCLUDE_RE = new RegExp(r'{{:include(\s*)(.*)}}');
+//  static final INCLUDE_RE = new RegExp(r'{{:include(\s*)(.*)}}');
+  static final INCLUDE_RE = new RegExp(r'<!--#include file="(\s*)(.*)" -->');
 
   final BarbackSettings _settings;
 

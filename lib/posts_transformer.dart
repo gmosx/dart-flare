@@ -9,6 +9,7 @@ import 'package:mustache/mustache.dart' as mustache;
 
 import 'package:flare/flare.dart';
 
+// TODO: Convert to AggregateTransformer.
 // TODO: Add error-handling code.
 // TODO: build a model of the posts, for index, categories, etc.
 
@@ -25,6 +26,8 @@ class PostsTransformer extends Transformer {
     _template = mustache.parse(new File(_layoutPath).readAsStringSync());
   }
 
+  /// The output extension is changed to *.tmpl.html so that the layout
+  /// template can be evaluated by a downstream transformer.
   @override
   apply(Transform transform) {
     final asset = transform.primaryInput;
@@ -39,7 +42,7 @@ class PostsTransformer extends Transformer {
             data['content'] = content;
             final newContent = _template.renderString(data, htmlEscapeValues: false);
             transform.consumePrimary();
-            transform.addOutput(new Asset.fromString(asset.id, newContent));
+            transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
           });
         });
       });

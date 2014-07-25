@@ -10,7 +10,8 @@ import 'package:flare/flare.dart';
 
 // TODO: add a setting to point to yaml file with default data.
 
-/// A Barback [Transformer] that evaluates Mustache template files.
+/// A Barback [Transformer] that evaluates [Mustache](http://mustache.github.io/)
+/// template files.
 class MustacheTransformer extends Transformer {
   static final _TMPL_RE = new RegExp(r'.tmpl.');
 

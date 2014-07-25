@@ -19,14 +19,14 @@ Map DEFAULT_METADATA = {
 const String DEFAULT_OPEN_DELIMITER = "<!--\n";
 const String DEFAULT_CLOSE_DELIMITER = "-->\n";
 
-class MetadataTransformer extends Transformer {
+class MetadataExtractor extends Transformer {
   static final _CONTENT_RE = new RegExp(r'(.html$)|(.md$)');
 
   final BarbackSettings _settings;
   String _openDelimiter;
   String _closeDelimiter;
 
-  MetadataTransformer.asPlugin(this._settings) {
+  MetadataExtractor.asPlugin(this._settings) {
     _openDelimiter = _settings.configuration.containsKey('open_delimiter') ?
         _settings.configuration['open_delimiter'] : DEFAULT_OPEN_DELIMITER;
 

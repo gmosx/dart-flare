@@ -9,10 +9,11 @@ import 'package:quiver/async.dart';
 
 import 'package:flare/flare.dart';
 
-class MetadataAggregationTransformer extends AggregateTransformer {
+class MetadataAggregator extends AggregateTransformer {
   final BarbackSettings _settings;
 
-  MetadataAggregationTransformer.asPlugin(this._settings);
+  MetadataAggregator.asPlugin(this._settings) {
+  }
 
   @override
   apply(AggregateTransform transform) {
@@ -37,7 +38,7 @@ class MetadataAggregationTransformer extends AggregateTransformer {
   @override
   classifyPrimary(AssetId id) {
     if (id.path.endsWith(METADATA_EXTENSION)) {
-      return 'meta';
+      return 'meta'; // TODO: replace with enum.
     } else {
       return 'content';
     }
