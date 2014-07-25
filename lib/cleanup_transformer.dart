@@ -22,7 +22,6 @@ class CleanupTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     return new Future.value(
-//        id.path.startsWith('web/packages') ||
         PRIVATE_RE.hasMatch(id.path) ||
         INC_RE.hasMatch(id.path) ||
         META_RE.hasMatch(id.path));

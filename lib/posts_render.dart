@@ -14,13 +14,13 @@ import 'package:flare/flare.dart';
 // TODO: build a model of the posts, for index, categories, etc.
 
 /// Renders a collection of posts.
-class PostsTransformer extends Transformer {
+class PostsRender extends Transformer {
   final BarbackSettings _settings;
   String _rootPath;
   String _layoutPath;
   mustache.Template _template;
 
-  PostsTransformer.asPlugin(this._settings) {
+  PostsRender.asPlugin(this._settings) {
     _rootPath = _settings.configuration['root'];
     _layoutPath = _settings.configuration['layout'];
     _template = mustache.parse(new File(_layoutPath).readAsStringSync());
