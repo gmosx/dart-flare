@@ -34,15 +34,12 @@ class MetadataExtractor extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-//      final data = new Map.from(DEFAULT_METADATA);
       final data = {};
 
       content = _addFrontMatterMetadata(content, data);
       _addExternalMetadata(asset, data);
 
       if (data.isNotEmpty) {
-//        data.addAll(DEFAULT_METADATA);
-
         final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$METADATA_EXTENSION");
         transform.addOutput(new Asset.fromString(id, JSON.encode(data)));
         transform.addOutput(new Asset.fromString(asset.id, content));

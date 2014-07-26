@@ -18,9 +18,6 @@ Map DEFAULT_METADATA = {
 /// A Barback [Transformer] that evaluates [Mustache](http://mustache.github.io/)
 /// template files.
 class MustacheTransformer extends Transformer {
-  static final _TMPL_RE = new RegExp(r'.tmpl.');
-  static final _INC_RE = new RegExp(r'.inc.');
-
   final BarbackSettings _settings;
 
   MustacheTransformer.asPlugin(this._settings) {
@@ -44,7 +41,9 @@ class MustacheTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
-    return new Future.value(_TMPL_RE.hasMatch(id.path) && (!_INC_RE.hasMatch(id.path)));
+    return new Future.value(TMPL_RE.hasMatch(id.path) &&
+        (!INC_RE.hasMatch(id.path)) &&
+        (!PRIVATE_RE.hasMatch(id.path)));
   }
 
   // TODO: better merge additional metadata.
