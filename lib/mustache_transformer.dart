@@ -10,10 +10,16 @@ import 'package:flare/flare.dart';
 
 // TODO: add a setting to point to yaml file with default data.
 
+// TODO: add support for user-defined defaults through [BarbackSettings].
+Map DEFAULT_METADATA = {
+  'time': new DateTime.now().toString()
+};
+
 /// A Barback [Transformer] that evaluates [Mustache](http://mustache.github.io/)
 /// template files.
 class MustacheTransformer extends Transformer {
   static final _TMPL_RE = new RegExp(r'.tmpl.');
+  static final _INC_RE = new RegExp(r'.inc.');
 
   final BarbackSettings _settings;
 
@@ -25,16 +31,12 @@ class MustacheTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      // Metadata is generated for all content files (.html, .md)
-      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
-        return meta.readAsString().then((json) {
-          final data = JSON.decode(json);
-          final template = mustache.parse(content);
-          final newContent = template.renderString(data, htmlEscapeValues: false);
-          final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-          transform.consumePrimary();
-          transform.addOutput(new Asset.fromString(newId, newContent));
-        });
+      return _loadMetadata(transform, asset).then((metadata) {
+        final template = mustache.parse(content);
+        final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+        final newContent = template.renderString(metadata, htmlEscapeValues: false);
+        transform.addOutput(new Asset.fromString(newId, newContent));
+        transform.consumePrimary();
       });
     });
   }
@@ -42,6 +44,19 @@ class MustacheTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
-    return new Future.value(_TMPL_RE.hasMatch(id.path));
+    return new Future.value(_TMPL_RE.hasMatch(id.path) && (!_INC_RE.hasMatch(id.path)));
+  }
+
+  // TODO: better merge additional metadata.
+  Future<Map> _loadMetadata(Transform transform, Asset asset) {
+    return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
+      return meta.readAsString().then((json) {
+        final metadata = JSON.decode(json);
+        metadata.addAll(DEFAULT_METADATA);
+        return metadata;
+      });
+    }).catchError((_) {
+      return DEFAULT_METADATA;
+    });
   }
 }
