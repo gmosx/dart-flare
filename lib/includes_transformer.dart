@@ -5,10 +5,11 @@ import 'dart:async';
 
 import 'package:barback/barback.dart';
 
+import 'package:flare/flare.dart';
+
 /// Resolves fragment/partial inclusion defined by SSI tags.
 class IncludesTransformer extends Transformer {
-  static final TMPL_RE = new RegExp(r'.tmpl.');
-  static final INCLUDE_RE = new RegExp(r'<!--#include file="(\s*)(.*)" -->');
+  static final _INCLUDE_RE = new RegExp(r'<!--#include file="(\s*)(.*)" -->');
 
   final BarbackSettings _settings;
 
@@ -20,7 +21,7 @@ class IncludesTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      final newContent = content.replaceAllMapped(INCLUDE_RE, (match) {
+      final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
         final includePath = match.group(2);
         return new File(includePath).readAsStringSync();
       });

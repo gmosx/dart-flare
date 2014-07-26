@@ -14,12 +14,8 @@ that Barback is versatile enough to support an extensible static content generat
 system. I am publishing this as a package in the hope to receive feedback 
 from the community. Pull requests will not hurt either ;-)
 
+The API is *not stable* yet!
  
-Example
--------
-
-A preliminary example is [available here](https://github.com/gmosx/dart-flare_example).
-
  
 Links
 -----
