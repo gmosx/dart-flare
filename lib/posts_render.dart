@@ -11,7 +11,6 @@ import 'package:flare/flare.dart';
 
 // TODO: Convert to AggregateTransformer.
 // TODO: Add error-handling code.
-// TODO: build a model of the posts, for index, categories, etc.
 
 /// Renders a collection of posts.
 class PostsRender extends Transformer {

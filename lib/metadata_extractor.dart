@@ -1,6 +1,6 @@
 library flare.metadata_transformer;
 
-// TODO: handle original input form both yaml and json.
+// TODO: handle original input from both yaml and json.
 
 import 'dart:io';
 import 'dart:convert' show JSON;

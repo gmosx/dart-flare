@@ -1,18 +1,13 @@
 library flare.includes_transformer;
 
-// TODO: implement this, it's not working yet!
-// TODO: rename to 'fragments' transformer?
-
 import 'dart:io';
 import 'dart:async';
 
 import 'package:barback/barback.dart';
 
-/// A Barback [Transformer] that builds the target site from the source
-/// files.
+/// Resolves fragment/partial inclusion defined by SSI tags.
 class IncludesTransformer extends Transformer {
   static final TMPL_RE = new RegExp(r'.tmpl.');
-//  static final INCLUDE_RE = new RegExp(r'{{:include(\s*)(.*)}}');
   static final INCLUDE_RE = new RegExp(r'<!--#include file="(\s*)(.*)" -->');
 
   final BarbackSettings _settings;
