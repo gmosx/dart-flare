@@ -5,7 +5,6 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 
 import 'package:barback/barback.dart';
-import 'package:mustache/mustache.dart' as mustache;
 
 import 'package:flare/flare.dart';
 
@@ -15,15 +14,17 @@ import 'package:flare/flare.dart';
 
 /// Renders a collection of posts.
 class PostsRender extends Transformer {
+  static final _CONTENT_RE = new RegExp(r'{{content}}');
+
   final BarbackSettings _settings;
   String _rootPath;
   String _layoutPath;
-  mustache.Template _template;
+  String _layout;
 
   PostsRender.asPlugin(this._settings) {
     _rootPath = _settings.configuration['root'];
     _layoutPath = _settings.configuration['layout'];
-    _template = mustache.parse(new File(_layoutPath).readAsStringSync());
+    _layout = new File(_layoutPath).readAsStringSync();
   }
 
   /// The output extension is changed to *.tmpl.html so that the layout
@@ -36,8 +37,7 @@ class PostsRender extends Transformer {
       return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
         return meta.readAsString().then((json) {
           final data = JSON.decode(json);
-          data['content'] = content;
-          final newContent = _template.renderString(data, htmlEscapeValues: false);
+          final newContent = _layout.replaceAll(_CONTENT_RE, content);
           transform.consumePrimary();
           final newId = _rewriteAssetId(asset.id);
           transform.addOutput(new Asset.fromString(newId.changeExtension('.meta.json'), json));
