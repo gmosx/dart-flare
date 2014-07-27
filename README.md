@@ -9,7 +9,7 @@ Status
 ------
 
 Flare is currently just an experiment. The goal is to validate the hypothesis
-that Barback is versatile enough to support an extensible static content generation
+that Barback is versatile enough to support an extensible static site generation
 system. I am publishing this as a package in the hope to receive feedback 
 from the community. Pull requests will not hurt either ;-)
 

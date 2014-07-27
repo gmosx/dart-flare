@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.2.0
+-----
+
+Keep track of site (global) metadata.
+Usable posts_indexer.
+Relative paths for included fragments.
+Refactoring and cleanup.
+
+
 0.1.0
 -----
 
