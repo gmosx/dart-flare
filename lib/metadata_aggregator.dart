@@ -21,10 +21,14 @@ class MetadataAggregator extends AggregateTransformer {
 
     if (transform.key == 'meta') {
       return transform.primaryInputs.toList().then((list) {
-        return reduceAsync(list, {}, (metadata, asset) {
+        return reduceAsync(list, {'sitemap': {}}, (metadata, asset) {
           package = asset.id.package;
-          return asset.readAsString().then((content) {
-            metadata[asset.id.path] = JSON.decode(content);
+          return asset.readAsString().then((json) {
+            if (asset.id.path.endsWith('_posts.meta.json')) {
+              metadata['posts'] = JSON.decode(json);
+            } else {
+              metadata['sitemap'][asset.id.path] = JSON.decode(json);
+            }
             return metadata;
           });
         });
@@ -40,7 +44,7 @@ class MetadataAggregator extends AggregateTransformer {
     if (id.path.endsWith(METADATA_EXTENSION)) {
       return 'meta'; // TODO: replace with enum.
     } else {
-      return 'content';
+      return null;
     }
   }
 }

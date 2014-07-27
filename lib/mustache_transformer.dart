@@ -1,5 +1,6 @@
 library flare.mustache_transformer;
 
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert' show JSON;
 
@@ -29,11 +30,23 @@ class MustacheTransformer extends Transformer {
 
     return asset.readAsString().then((content) {
       return _loadMetadata(transform, asset).then((metadata) {
-        final template = mustache.parse(content);
-        final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-        final newContent = template.renderString(metadata, htmlEscapeValues: false);
-        transform.addOutput(new Asset.fromString(newId, newContent));
-        transform.consumePrimary();
+        return transform.getInput(new AssetId(asset.id.package, 'web/_site.$METADATA_EXTENSION')).then((meta) {
+          return meta.readAsString().then((json) {
+            metadata['metadata'] = JSON.decode(json);
+            final template = mustache.parse(content);
+            final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+            final newContent = template.renderString(metadata, htmlEscapeValues: false);
+            transform.addOutput(new Asset.fromString(newId, newContent));
+            transform.consumePrimary();
+          });
+        });
+
+//        metadata['metadata'] = new Map.from(_global);
+//        final template = mustache.parse(content);
+//        final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+//        final newContent = template.renderString(metadata, htmlEscapeValues: false);
+//        transform.addOutput(new Asset.fromString(newId, newContent));
+//        transform.consumePrimary();
       });
     });
   }

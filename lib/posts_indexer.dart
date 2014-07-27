@@ -31,7 +31,7 @@ class PostsIndexer extends AggregateTransformer {
                 final data = JSON.decode(json);
                 data['content'] = content;
                 final newId = _rewriteAssetId(asset.id);
-                data['path'] = newId.path;
+                data['path'] = newId.path.replaceAll(new RegExp(r'^web/'), ''); // TODO: temp hack.
                 posts.add(data);
                 return posts;
               });
