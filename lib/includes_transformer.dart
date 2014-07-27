@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:barback/barback.dart';
+import 'package:path/path.dart' as posix;
 
 import 'package:flare/flare.dart';
 
@@ -20,9 +21,16 @@ class IncludesTransformer extends Transformer {
   apply(Transform transform) {
     final asset = transform.primaryInput;
 
+    final relativeRootPath = posix.dirname(asset.id.path);
+
     return asset.readAsString().then((content) {
       final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
-        final includePath = match.group(2);
+        var includePath = match.group(2);
+        if (!includePath.startsWith('/')) {
+          includePath = '$relativeRootPath/$includePath';
+        } else {
+          includePath = 'web$includePath';
+        }
         return new File(includePath).readAsStringSync();
       });
 
