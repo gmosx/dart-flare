@@ -1,14 +1,19 @@
 Flare
 =====
 
-Flare is a collection of Barback transformers for content generation.
-The typical use case is the static generation of web sites (similar to Jekyll, etc).
+Flare is a collection of Barback transformers for static generation of web sites,  
+similar to Jekyll, etc.
 
 
 Transformers
 ------------
 
 * MarkdownTransformer
+* MetadataExtractor
+* MetadataAggregator
+* PostsIndexer
+* PostsTransformer
+* MustacheTransformer
 * CleanupTransformer
 
 
