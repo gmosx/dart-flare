@@ -5,6 +5,12 @@ Flare is a collection of Barback transformers for static generation of web sites
 similar to Jekyll, etc.
 
 
+Example
+-------
+
+A preliminary example is [available here](https://github.com/gmosx/dart-flare_example).
+
+
 Transformers
 ------------
 

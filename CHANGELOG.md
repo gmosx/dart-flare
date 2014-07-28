@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.1
+-----
+
+Added link to updated flare_example.
+
+
 0.2.0
 -----
 
