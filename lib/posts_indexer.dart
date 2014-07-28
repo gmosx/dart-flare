@@ -9,7 +9,11 @@ import 'package:quiver/async.dart';
 
 import 'package:flare/flare.dart';
 
+/// Computes indexing metadata for the posts.
 class PostsIndexer extends AggregateTransformer {
+  static const _POSTS_KEY = 1;
+  static final _PATH_PREFIX = new RegExp(r'^web/');
+
   final BarbackSettings _settings;
   String _rootPath;
 
@@ -21,7 +25,7 @@ class PostsIndexer extends AggregateTransformer {
   apply(AggregateTransform transform) {
     String package;
 
-    if (transform.key == 'post') {
+    if (transform.key == _POSTS_KEY) {
       return transform.primaryInputs.toList().then((list) {
         return reduceAsync(list, [], (posts, asset) {
           package = asset.id.package;
@@ -29,9 +33,8 @@ class PostsIndexer extends AggregateTransformer {
             return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
               return meta.readAsString().then((json) {
                 final data = JSON.decode(json);
-                data['content'] = content;
                 final newId = _rewriteAssetId(asset.id);
-                data['path'] = newId.path.replaceAll(new RegExp(r'^web/'), ''); // TODO: temp hack.
+                data['path'] = newId.path.replaceAll(_PATH_PREFIX, ''); // TODO: temp hack.
                 posts.add(data);
                 return posts;
               });
@@ -40,7 +43,7 @@ class PostsIndexer extends AggregateTransformer {
         });
       }).then((posts) {
         final id = new AssetId(package, 'web/_posts.$METADATA_EXTENSION');
-        transform.addOutput(new Asset.fromString(id, JSON.encode(posts)));
+        transform.addOutput(new Asset.fromString(id, JSON.encode({'posts': posts})));
       });
     }
   }
@@ -48,7 +51,7 @@ class PostsIndexer extends AggregateTransformer {
   @override
   classifyPrimary(AssetId id) {
     if (id.path.startsWith(_rootPath) && id.path.endsWith('.html')) {
-      return 'post';
+      return _POSTS_KEY;
     } else {
       return null;
     }

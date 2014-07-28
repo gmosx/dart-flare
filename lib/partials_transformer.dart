@@ -8,13 +8,13 @@ import 'package:path/path.dart' as posix;
 
 import 'package:flare/flare.dart';
 
-/// Resolves fragment/partial inclusion defined by SSI tags.
-class IncludesTransformer extends Transformer {
-  static final _INCLUDE_RE = new RegExp(r'<!--#include file="(\s*)(.*)" -->');
+/// Includes partials into content files. Mustache-like syntax is used.
+class PartialsTransformer extends Transformer {
+  static final _INCLUDE_RE = new RegExp(r'{{>(\s*)(.*)}}(\s*)');
 
   final BarbackSettings _settings;
 
-  IncludesTransformer.asPlugin(this._settings) {
+  PartialsTransformer.asPlugin(this._settings) {
   }
 
   @override

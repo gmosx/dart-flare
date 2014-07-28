@@ -8,12 +8,10 @@ import 'package:barback/barback.dart';
 
 import 'package:flare/flare.dart';
 
-// TODO: Convert to AggregateTransformer.
 // TODO: Add error-handling code.
-// TODO: build a model of the posts, for index, categories, etc.
 
 /// Renders a collection of posts.
-class PostsRender extends Transformer {
+class PostsTransformer extends Transformer {
   static final _CONTENT_RE = new RegExp(r'{{content}}');
 
   final BarbackSettings _settings;
@@ -21,7 +19,7 @@ class PostsRender extends Transformer {
   String _layoutPath;
   String _layout;
 
-  PostsRender.asPlugin(this._settings) {
+  PostsTransformer.asPlugin(this._settings) {
     _rootPath = _settings.configuration['root'];
     _layoutPath = _settings.configuration['layout'];
     _layout = new File(_layoutPath).readAsStringSync();

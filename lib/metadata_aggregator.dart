@@ -9,7 +9,11 @@ import 'package:quiver/async.dart';
 
 import 'package:flare/flare.dart';
 
+/// Aggregates all metadata files into a single metadata map which is accessible
+/// everywhere under the [site] key.
 class MetadataAggregator extends AggregateTransformer {
+  static const _METADATA_KEY = 1;
+
   final BarbackSettings _settings;
 
   MetadataAggregator.asPlugin(this._settings) {
@@ -19,13 +23,13 @@ class MetadataAggregator extends AggregateTransformer {
   apply(AggregateTransform transform) {
     String package;
 
-    if (transform.key == 'meta') {
+    if (transform.key == _METADATA_KEY) {
       return transform.primaryInputs.toList().then((list) {
         return reduceAsync(list, {'sitemap': {}}, (metadata, asset) {
           package = asset.id.package;
           return asset.readAsString().then((json) {
-            if (asset.id.path.endsWith('_posts.meta.json')) {
-              metadata['posts'] = JSON.decode(json);
+            if (PRIVATE_RE.hasMatch(asset.id.path)) {
+              metadata.addAll(JSON.decode(json));
             } else {
               metadata['sitemap'][asset.id.path] = JSON.decode(json);
             }
@@ -42,7 +46,7 @@ class MetadataAggregator extends AggregateTransformer {
   @override
   classifyPrimary(AssetId id) {
     if (id.path.endsWith(METADATA_EXTENSION)) {
-      return 'meta'; // TODO: replace with enum.
+      return _METADATA_KEY;
     } else {
       return null;
     }

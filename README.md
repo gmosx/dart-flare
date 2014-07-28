@@ -5,6 +5,13 @@ Flare is a collection of Barback transformers for content generation.
 The typical use case is the static generation of web sites (similar to Jekyll, etc).
 
 
+Transformers
+------------
+
+* MarkdownTransformer
+* CleanupTransformer
+
+
 Status
 ------
 

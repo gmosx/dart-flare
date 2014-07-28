@@ -5,8 +5,7 @@ import 'dart:async';
 import 'package:barback/barback.dart';
 import 'package:markdown/markdown.dart' show markdownToHtml;
 
-/// A Barback [Transformer] that builds the target site from the source
-/// files.
+/// Converts markdown files into html files.
 class MarkdownTransformer extends Transformer {
   final BarbackSettings _settings;
 

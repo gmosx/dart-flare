@@ -1,7 +1,5 @@
 library flare.metadata_transformer;
 
-// TODO: handle original input from both yaml and json.
-
 import 'dart:io';
 import 'dart:convert' show JSON;
 import 'dart:async';
@@ -14,6 +12,9 @@ import 'package:flare/flare.dart';
 const String DEFAULT_OPEN_DELIMITER = "<!--\n";
 const String DEFAULT_CLOSE_DELIMITER = "-->\n";
 
+/// Extracts metadata from content files. Metadata can be included as 'front-matter'
+/// inside the content file, or attached to an external file with the same basename
+/// and .yaml extension. Metadata is defined in YAML format.
 class MetadataExtractor extends Transformer {
   static final _CONTENT_RE = new RegExp(r'(.html$)|(.md$)');
 
