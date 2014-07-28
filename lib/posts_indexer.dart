@@ -33,8 +33,7 @@ class PostsIndexer extends AggregateTransformer {
             return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
               return meta.readAsString().then((json) {
                 final data = JSON.decode(json);
-                final newId = _rewriteAssetId(asset.id);
-                data['path'] = newId.path.replaceAll(_PATH_PREFIX, ''); // TODO: temp hack.
+                data['path'] = asset.id.path.replaceAll(_PATH_PREFIX, ''); // TODO: temp hack.
                 posts.add(data);
                 return posts;
               });
@@ -55,16 +54,5 @@ class PostsIndexer extends AggregateTransformer {
     } else {
       return null;
     }
-  }
-
-  AssetId _rewriteAssetId(AssetId id) {
-    var path = id.path;
-
-    // TODO: crappy, use some cool RegExp here!
-    path = path.replaceFirst('-', '/');
-    path = path.replaceFirst('-', '/');
-    path = path.replaceFirst('-', '/');
-
-    return new AssetId(id.package, path);
   }
 }

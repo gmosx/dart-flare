@@ -37,9 +37,7 @@ class PostsTransformer extends Transformer {
           final data = JSON.decode(json);
           final newContent = _layout.replaceAll(_CONTENT_RE, content);
           transform.consumePrimary();
-          final newId = _rewriteAssetId(asset.id);
-          transform.addOutput(new Asset.fromString(newId.changeExtension('.meta.json'), json));
-          transform.addOutput(new Asset.fromString(newId.changeExtension('.tmpl.html'), newContent));
+          transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
         });
       });
     });
@@ -49,16 +47,5 @@ class PostsTransformer extends Transformer {
   Future<bool> isPrimary(AssetId id) {
     return new Future.value((id.path.startsWith(_rootPath) &&
         (!PRIVATE_RE.hasMatch(id.path)) && id.path.endsWith('.html')));
-  }
-
-  AssetId _rewriteAssetId(AssetId id) {
-    var path = id.path;
-
-    // TODO: crappy, use some cool RegExp here!
-    path = path.replaceFirst('-', '/');
-    path = path.replaceFirst('-', '/');
-    path = path.replaceFirst('-', '/');
-
-    return new AssetId(id.package, path);
   }
 }
