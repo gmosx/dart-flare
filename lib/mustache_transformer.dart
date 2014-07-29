@@ -32,7 +32,7 @@ class MustacheTransformer extends Transformer {
         return transform.getInput(new AssetId(asset.id.package, 'web/_site.$METADATA_EXTENSION')).then((meta) {
           return meta.readAsString().then((json) {
             metadata['site'] = JSON.decode(json);
-            final template = mustache.parse(content);
+            final template = mustache.parse(content, lenient: true);
             final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
             final newContent = template.renderString(metadata, htmlEscapeValues: false);
             transform.addOutput(new Asset.fromString(newId, newContent));
