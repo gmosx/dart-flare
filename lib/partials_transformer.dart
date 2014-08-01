@@ -31,7 +31,17 @@ class PartialsTransformer extends Transformer {
         } else {
           includePath = 'web$includePath';
         }
-        return new File(includePath).readAsStringSync();
+
+        final file = new File(includePath);
+
+        // TODO: maybe async methods can be used here?
+
+        if (file.existsSync()) {
+          return new File(includePath).readAsStringSync();
+        } else {
+          transform.logger.error("Fragment '$includePath' not found!");
+          return "";
+        }
       });
 
       transform.addOutput(new Asset.fromString(asset.id, newContent));
