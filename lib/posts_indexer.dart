@@ -34,6 +34,7 @@ class PostsIndexer extends AggregateTransformer {
               return meta.readAsString().then((json) {
                 final data = JSON.decode(json);
                 data['path'] = asset.id.path.replaceAll(_PATH_PREFIX, ''); // TODO: temp hack.
+                data['content'] = content;
                 posts.add(data);
                 return posts;
               });

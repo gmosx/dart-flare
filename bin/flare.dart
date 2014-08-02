@@ -19,9 +19,13 @@ final DateFormat DATE_FORMAT = new DateFormat('yyyy/MM/dd');
 /// $ flare new-post --date=2014/08/02 "This is another post"
 void main(List<String> args) {
   final parser = new ArgParser();
+
   parser.addCommand('generate-post-id');
+
   final newPost = parser.addCommand('new-post');
   newPost.addOption('date', abbr: 'd', help: "The creation data of the post");
+
+  parser.addCommand('delete-post');
 
   final cli = parser.parse(args);
 
