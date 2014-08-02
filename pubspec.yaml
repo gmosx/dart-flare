@@ -6,6 +6,7 @@ homepage: https://github.com/gmosx/dart-flare
 dependencies:
   args: any
   barback: '>=0.14.0+3 <0.15.0'
+  intl: any
   markdown: '>=0.7.0 <0.8.0'
   mustache: '>=0.1.8 <0.2.0'
   path: '>=1.2.2 <2.0.0'
