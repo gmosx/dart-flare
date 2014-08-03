@@ -6,9 +6,7 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 import 'package:args/args.dart';
-
-/// The 'epoch' for the id sequence is 1 Jan 2000.
-final int ID_EPOCH_MS = new DateTime(2000).millisecondsSinceEpoch;
+import 'package:uuid/uuid_server.dart';
 
 final DateFormat DATE_FORMAT = new DateFormat('yyyy/MM/dd');
 
@@ -50,10 +48,11 @@ void main(List<String> args) {
   }
 }
 
-/// Generates an persistent id for a post. This id uniquely identifies the post
-/// and is independent of post metadata (e.g. title).
+/// Generates a persistent id for a post. This id uniquely identifies the post
+/// and is independent of post metadata (e.g. title). Moreover, the id does not
+/// imply ordering of posts. Currenlyt we use a v4 UUID.
 String generateNewPostId() {
-  return ((new DateTime.now().millisecondsSinceEpoch - ID_EPOCH_MS)/ 1000).toStringAsFixed(0);
+  return new Uuid().v4();
 }
 
 /// Creates subdirectories and the file for a new post.
