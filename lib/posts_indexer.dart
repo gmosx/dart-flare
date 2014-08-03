@@ -45,8 +45,15 @@ class PostsIndexer extends AggregateTransformer {
         // Sort the posts by path (effectively by inverse chronological order).
         posts.sort((x, y) => y['path'].compareTo(x['path']));
 
+        final metadata = {
+            'posts': {
+              'latest': posts.sublist(0, 10),
+              'all': posts
+            }
+        };
+
         final id = new AssetId(package, 'web/_posts.$METADATA_EXTENSION');
-        transform.addOutput(new Asset.fromString(id, JSON.encode({'posts': posts})));
+        transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
       });
     }
   }
