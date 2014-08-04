@@ -60,11 +60,9 @@ void createNewPost(String title, {DateTime date}) {
   final dirname = 'web/posts/${date}';
   final filename = '${_slugify(title)}.md';
 
-  new Directory(dirname).create(recursive: true);
+  new Directory(dirname).createSync(recursive: true);
 
   final file = new File('$dirname/$filename');
-
-  // TODO: handle date formatting.
 
   if (file.existsSync()) {
     print("Can't create post, '$dirname/$filename' already exists!");
