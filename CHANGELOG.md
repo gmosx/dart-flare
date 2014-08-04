@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.3
+-----
+
+Flare cli.
+Fixes
+
+
 0.2.1
 -----
 
