@@ -37,6 +37,6 @@ The API is *not stable* yet!
 Links
 -----
 
-* [Static Site Generators](http://staticsitegenerators.net/)
+* [Author's blog using Flare](http://www.gmosx.com)
 * [Pub Assets and Transformers](https://www.dartlang.org/tools/pub/assets-and-transformers.html)
 * [Writing Transformers](https://www.dartlang.org/tools/pub/transformers/examples/)
