@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.4
+-----
+
+Fixed nasty classification bug.
+
+
 0.2.3
 -----
 
