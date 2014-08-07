@@ -11,7 +11,7 @@ import 'package:flare/flare.dart';
 
 /// Computes indexing metadata for the posts.
 class PostsIndexer extends AggregateTransformer {
-  static const _POSTS_KEY = 1;
+  static const _POSTS_KEY = 'posts';
   static final _PATH_PREFIX = new RegExp(r'^web/');
 
   final BarbackSettings _settings;
@@ -47,7 +47,7 @@ class PostsIndexer extends AggregateTransformer {
 
         final metadata = {
             'posts': {
-              'latest': posts.sublist(0, 10),
+              'latest': posts.length > 10 ? posts.sublist(0, 10) : posts,
               'all': posts
             }
         };

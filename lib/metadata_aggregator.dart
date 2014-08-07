@@ -12,7 +12,7 @@ import 'package:flare/flare.dart';
 /// Aggregates all metadata files into a single metadata map which is accessible
 /// everywhere under the [site] key.
 class MetadataAggregator extends AggregateTransformer {
-  static const _METADATA_KEY = 1;
+  static const String _METADATA_KEY = 'meta';
 
   final BarbackSettings _settings;
 
