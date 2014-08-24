@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.5
+-----
+
+Added support for custom metadata in YAML format, aggregated to the 'site'
+namespace.
+
+
 0.2.4
 -----
 
