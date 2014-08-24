@@ -29,7 +29,7 @@ class MustacheTransformer extends Transformer {
 
     return asset.readAsString().then((content) {
       return _loadMetadata(transform, asset).then((metadata) {
-        return transform.getInput(new AssetId(asset.id.package, 'web/_site.$METADATA_EXTENSION')).then((meta) {
+        return transform.getInput(new AssetId(asset.id.package, 'web/__site.$METADATA_EXTENSION')).then((meta) {
           return meta.readAsString().then((json) {
             metadata['site'] = JSON.decode(json);
             final template = mustache.parse(content, lenient: true);

@@ -1,4 +1,4 @@
-library flare.metadata_aggregation_transformer;
+library flare.metadata_aggregator;
 
 import 'dart:convert' show JSON;
 
@@ -37,7 +37,8 @@ class MetadataAggregator extends AggregateTransformer {
           });
         });
       }).then((metadata) {
-        final id = new AssetId(package, 'web/_site.$METADATA_EXTENSION');
+        metadata['update_time'] = new DateTime.now().toIso8601String();
+        final id = new AssetId(package, 'web/__site.$METADATA_EXTENSION');
         transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
       });
     }

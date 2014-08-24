@@ -45,6 +45,7 @@ class PostsIndexer extends AggregateTransformer {
         // Sort the posts by path (effectively by inverse chronological order).
         posts.sort((x, y) => y['path'].compareTo(x['path']));
 
+        // TODO: make posts count a configuration parameter!
         final metadata = {
             'posts': {
               'latest': posts.length > 10 ? posts.sublist(0, 10) : posts,

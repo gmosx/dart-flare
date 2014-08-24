@@ -1,4 +1,4 @@
-library flare.metadata_transformer;
+library flare.metadata_extractor;
 
 import 'dart:io';
 import 'dart:convert' show JSON;
