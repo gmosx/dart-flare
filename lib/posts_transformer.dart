@@ -32,15 +32,15 @@ class PostsTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
-        return meta.readAsString().then((json) {
-          final data = JSON.decode(json);
+//      return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
+//        return meta.readAsString().then((json) {
+//          final data = JSON.decode(json);
           final newContent = _layout.replaceAll(_CONTENT_RE, content);
           transform.consumePrimary();
           transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
         });
-      });
-    });
+//      });
+//    });
   }
 
   @override
