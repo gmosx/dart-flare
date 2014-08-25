@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:convert' show JSON;
 import 'dart:async';
 
+import 'package:intl/intl.dart';
 import 'package:barback/barback.dart';
 import 'package:yaml/yaml.dart' show loadYaml;
 
@@ -17,8 +18,10 @@ const String DEFAULT_CLOSE_DELIMITER = "-->\n";
 /// and .yaml extension. Metadata is defined in YAML format.
 class MetadataExtractor extends Transformer {
   static final _CONTENT_RE = new RegExp(r'(.html$)|(.md$)');
+  static final _DATE_RE = new RegExp(r'[Dd]ate$');
 
   final BarbackSettings _settings;
+  DateFormat _dateFormat;
   String _openDelimiter;
   String _closeDelimiter;
 
@@ -28,6 +31,8 @@ class MetadataExtractor extends Transformer {
 
     _closeDelimiter = _settings.configuration.containsKey('close_delimiter') ?
         _settings.configuration['close_delimiter'] : DEFAULT_CLOSE_DELIMITER;
+
+    _dateFormat = new DateFormat('yMMMMd'); // TODO: make customizable.
   }
 
   @override
@@ -42,7 +47,7 @@ class MetadataExtractor extends Transformer {
 
       if (data.isNotEmpty) {
         final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$METADATA_EXTENSION");
-        transform.addOutput(new Asset.fromString(id, JSON.encode(data)));
+        transform.addOutput(new Asset.fromString(id, JSON.encode(_normalizeData(data))));
         transform.addOutput(new Asset.fromString(asset.id, content));
       }
     });
@@ -74,5 +79,28 @@ class MetadataExtractor extends Transformer {
     if (metaFile.existsSync()) {
       data.addAll(loadYaml(metaFile.readAsStringSync()));
     }
+  }
+
+  // Formats dates as human, iso.
+  Map _normalizeData(Map data) {
+    data.keys.forEach((key) {
+      if (_DATE_RE.hasMatch(key)) {
+        try {
+          var date = DateTime.parse(data[key]);
+          data[key] = {
+            'human': _dateFormat.format(date),
+            'iso': date.toIso8601String()
+          };
+        } on FormatException catch (e) {
+          // TODO: Temp hack-fix until I convert all my blog posts.
+          data[key] = {
+            'human': data[key],
+            'iso': new DateTime.now().toIso8601String()
+          };
+        }
+      }
+    });
+
+    return data;
   }
 }
