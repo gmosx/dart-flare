@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.0
+-----
+
+Custom processing for dates/time to support rss/atom generation.
+
+
 0.2.5
 -----
 
