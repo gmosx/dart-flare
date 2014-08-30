@@ -47,7 +47,6 @@ class MustacheTransformer extends Transformer {
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
     return new Future.value(TMPL_RE.hasMatch(id.path) &&
-        (!INC_RE.hasMatch(id.path)) &&
         (!PRIVATE_RE.hasMatch(id.path)));
   }
 
