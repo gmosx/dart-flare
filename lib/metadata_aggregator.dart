@@ -37,7 +37,9 @@ class MetadataAggregator extends AggregateTransformer {
           });
         });
       }).then((metadata) {
-        metadata['update_time'] = new DateTime.now().toIso8601String();
+        metadata['update_time'] = {
+          'iso': new DateTime.now().toIso8601String()
+        };
         final id = new AssetId(package, 'web/__site.$METADATA_EXTENSION');
         transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
       });
