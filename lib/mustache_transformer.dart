@@ -1,6 +1,5 @@
 library flare.mustache_transformer;
 
-import 'dart:io';
 import 'dart:async';
 import 'dart:convert' show JSON;
 
@@ -32,12 +31,15 @@ class MustacheTransformer extends Transformer {
         return transform.getInput(new AssetId(asset.id.package, 'web/__site.$METADATA_EXTENSION')).then((meta) {
           return meta.readAsString().then((json) {
             metadata['site'] = JSON.decode(json);
-            final template = mustache.parse(content, lenient: true);
-            final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-            final newContent = template.renderString(metadata, htmlEscapeValues: false);
-            transform.addOutput(new Asset.fromString(newId, newContent));
-            transform.consumePrimary();
           });
+        }).catchError((e) {
+          // No global site meta data found, consume the exception and continue.
+        }).whenComplete(() {
+          final template = mustache.parse(content, lenient: true);
+          final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+          final newContent = template.renderString(metadata, htmlEscapeValues: false);
+          transform.addOutput(new Asset.fromString(newId, newContent));
+          transform.consumePrimary();
         });
       });
     });
