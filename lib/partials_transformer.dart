@@ -1,6 +1,5 @@
-library flare.includes_transformer;
+library flare.partials_transformer;
 
-import 'dart:io';
 import 'dart:async';
 
 import 'package:barback/barback.dart';
@@ -24,27 +23,34 @@ class PartialsTransformer extends Transformer {
     final relativeRootPath = posix.dirname(asset.id.path);
 
     return asset.readAsString().then((content) {
-      final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
+      final List<Future> futures = [];
+      final Map<String, String> partials = {};
+
+      _INCLUDE_RE.allMatches(content).forEach((match) {
         var includePath = match.group(2);
+
         if (!includePath.startsWith('/')) {
           includePath = '$relativeRootPath/$includePath';
         } else {
           includePath = 'web$includePath';
         }
 
-        final file = new File(includePath);
-
-        // TODO: maybe async methods can be used here?
-
-        if (file.existsSync()) {
-          return new File(includePath).readAsStringSync();
-        } else {
+        futures.add(transform.getInput(new AssetId(asset.id.package, includePath)).then((partial) {
+          return partial.readAsString().then((content) {
+            partials[match.group(2)] = content;
+          });
+        }).catchError((_) {
           transform.logger.error("Fragment '$includePath' not found!");
-          return "";
-        }
+        }));
       });
 
-      transform.addOutput(new Asset.fromString(asset.id, newContent));
+      return Future.wait(futures).then((_) {
+        final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
+          return partials[match.group(2)];
+        });
+
+        transform.addOutput(new Asset.fromString(asset.id, newContent));
+      });
     });
   }
 
