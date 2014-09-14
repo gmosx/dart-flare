@@ -27,26 +27,22 @@ class PartialsTransformer extends Transformer {
       final Map<String, String> partials = {};
 
       _INCLUDE_RE.allMatches(content).forEach((match) {
-        var includePath = match.group(2);
+        final path = match.group(2);
 
-        if (!includePath.startsWith('/')) {
-          includePath = '$relativeRootPath/$includePath';
-        } else {
-          includePath = 'web$includePath';
-        }
-
-        futures.add(transform.getInput(new AssetId(asset.id.package, includePath)).then((partial) {
+        futures.add(transform.getInput(new AssetId(asset.id.package, _normalizePath(path, relativeRootPath))).then((partial) {
+          // TODO: cache partials between invocations.
           return partial.readAsString().then((content) {
-            partials[match.group(2)] = content;
+            partials[path] = content;
           });
         }).catchError((_) {
-          transform.logger.error("Fragment '$includePath' not found!");
+          transform.logger.error("Fragment '$path' not found!");
         }));
       });
 
       return Future.wait(futures).then((_) {
         final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
-          return partials[match.group(2)];
+          final path = match.group(2);
+          return partials[path];
         });
 
         transform.addOutput(new Asset.fromString(asset.id, newContent));
@@ -59,5 +55,13 @@ class PartialsTransformer extends Transformer {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
     // TODO: also check that .inc. is not included in the path?
     return new Future.value(TMPL_RE.hasMatch(id.path));
+  }
+
+  String _normalizePath(String path, String relativeRootPath) {
+    if (!path.startsWith('/')) {
+      return '$relativeRootPath/$path';
+    } else {
+      return 'web$path';
+    }
   }
 }

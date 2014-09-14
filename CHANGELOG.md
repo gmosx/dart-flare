@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.1
+-----
+
+Partials transformer detects changes in partials without restart (i.e. a new
+pub serve).
+
+
 0.3.0
 -----
 
