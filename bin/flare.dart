@@ -1,6 +1,7 @@
 #!/usr/bin/env dart
 
 // TODO: Use the logger package.
+// TODO: Rename to flare-cli?
 
 import 'dart:io';
 
@@ -25,6 +26,8 @@ void main(List<String> args) {
 
   parser.addCommand('delete-post');
 
+  parser.addCommand('version');
+
   final cli = parser.parse(args);
 
   if (cli.command != null) {
@@ -41,6 +44,10 @@ void main(List<String> args) {
           date = DATE_FORMAT.format(new DateTime.now());
         }
         createNewPost(cli.command.rest.first, date: date);
+        break;
+
+      case 'version':
+        print("Flare version 0.4.0");
         break;
     }
   } else {
@@ -81,7 +88,7 @@ TODO: Add the text of your post here!'''
   }
 }
 
-String _slugify(String title) {
+String _slugify(String title) { // TODO: use inflection package for this!
   return title.replaceAll(new RegExp(' '), '-').
       replaceAll(new RegExp(r"['?!.,]"), '').toLowerCase();
 }
