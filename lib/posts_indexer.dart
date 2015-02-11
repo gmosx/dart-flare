@@ -30,7 +30,7 @@ class PostsIndexer extends AggregateTransformer {
         return reduceAsync(list, [], (posts, asset) {
           package = asset.id.package;
           return asset.readAsString().then((content) {
-            return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
+            return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$metadataExtension')).then((meta) {
               return meta.readAsString().then((json) {
                 final data = JSON.decode(json);
                 data['path'] = asset.id.path.replaceAll(_PATH_PREFIX, ''); // TODO: temp hack.
@@ -53,7 +53,7 @@ class PostsIndexer extends AggregateTransformer {
             }
         };
 
-        final id = new AssetId(package, 'web/_posts.$METADATA_EXTENSION');
+        final id = new AssetId(package, 'web/_posts.$metadataExtension');
         transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
       });
     }

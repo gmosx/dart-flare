@@ -1,11 +1,13 @@
 name: flare
-version: 0.4.0
+version: 0.5.0
 author: George Moschovitis <george.moschovitis@gmail.com>
 description: Flare is a set of Barback transformers that collectively implement a versatile static-site generation system.
 homepage: https://github.com/gmosx/dart-flare
 dependencies:
   args: '>=0.12.0+1 <0.13.0'
   barback: '>=0.15.0 <0.16.0'
+  html5lib: any
+  inflection: any
   intl: '>=0.8.10+4 <0.9.0'
   markdown: '>=0.7.0 <0.8.0'
   mustache: '>=0.1.8 <0.2.0'
@@ -15,6 +17,7 @@ dependencies:
   uuid: '>=0.3.2 <0.4.0'
   yaml: '>=1.1.1 <2.0.0'
 dev_dependencies:
+  code_transformers: any
   unittest: any
 executables:
   flare: null

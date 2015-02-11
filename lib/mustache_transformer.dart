@@ -9,6 +9,7 @@ import 'package:mustache/mustache.dart' as mustache;
 import 'package:flare/flare.dart';
 
 // TODO: add a setting to point to yaml file with default data.
+// TODO: don't use .tmpl. to allow this to work  through the IDE / simplify names.
 
 // TODO: add support for user-defined defaults through [BarbackSettings].
 Map DEFAULT_METADATA = {
@@ -28,7 +29,7 @@ class MustacheTransformer extends Transformer {
 
     return asset.readAsString().then((content) {
       return _loadMetadata(transform, asset).then((metadata) {
-        return transform.getInput(new AssetId(asset.id.package, 'web/__site.$METADATA_EXTENSION')).then((meta) {
+        return transform.getInput(new AssetId(asset.id.package, 'web/__site.$metadataExtension')).then((meta) {
           return meta.readAsString().then((json) {
             metadata['site'] = JSON.decode(json);
           });
@@ -48,13 +49,13 @@ class MustacheTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
-    return new Future.value(TMPL_RE.hasMatch(id.path) &&
-        (!PRIVATE_RE.hasMatch(id.path)));
+    return new Future.value(tmplRE.hasMatch(id.path) &&
+        (!privateRE.hasMatch(id.path)));
   }
 
   // TODO: better merge additional metadata.
   Future<Map> _loadMetadata(Transform transform, Asset asset) {
-    return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$METADATA_EXTENSION')).then((meta) {
+    return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$metadataExtension')).then((meta) {
       return meta.readAsString().then((json) {
         final metadata = JSON.decode(json);
         metadata.addAll(DEFAULT_METADATA);

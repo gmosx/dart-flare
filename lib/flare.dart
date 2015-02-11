@@ -1,6 +1,6 @@
 library flare;
 
-const METADATA_EXTENSION = 'meta.json';
+const metadataExtension = 'meta.json';
 
-final PRIVATE_RE = new RegExp(r'/_');
-final TMPL_RE = new RegExp(r'.tmpl.');
+final privateRE = new RegExp(r'/_');
+final tmplRE = new RegExp(r'.tmpl.');

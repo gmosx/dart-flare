@@ -12,7 +12,7 @@ import 'package:flare/flare.dart';
 /// Aggregates all metadata files into a single metadata map which is accessible
 /// everywhere under the [site] key.
 class MetadataAggregator extends AggregateTransformer {
-  static const String _METADATA_KEY = 'meta';
+  static const String _metadataKey = 'meta';
 
   final BarbackSettings _settings;
 
@@ -23,12 +23,12 @@ class MetadataAggregator extends AggregateTransformer {
   apply(AggregateTransform transform) {
     String package;
 
-    if (transform.key == _METADATA_KEY) {
+    if (transform.key == _metadataKey) {
       return transform.primaryInputs.toList().then((list) {
         return reduceAsync(list, {'sitemap': {}}, (metadata, asset) {
           package = asset.id.package;
           return asset.readAsString().then((json) {
-            if (PRIVATE_RE.hasMatch(asset.id.path)) {
+            if (privateRE.hasMatch(asset.id.path)) {
               metadata.addAll(JSON.decode(json));
             } else {
               metadata['sitemap'][asset.id.path] = JSON.decode(json);
@@ -40,7 +40,7 @@ class MetadataAggregator extends AggregateTransformer {
         metadata['update_time'] = {
           'iso': new DateTime.now().toIso8601String()
         };
-        final id = new AssetId(package, 'web/__site.$METADATA_EXTENSION');
+        final id = new AssetId(package, 'web/__site.$metadataExtension');
         transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
       });
     }
@@ -48,8 +48,8 @@ class MetadataAggregator extends AggregateTransformer {
 
   @override
   classifyPrimary(AssetId id) {
-    if (id.path.endsWith(METADATA_EXTENSION)) {
-      return _METADATA_KEY;
+    if (id.path.endsWith(metadataExtension)) {
+      return _metadataKey;
     } else {
       return null;
     }

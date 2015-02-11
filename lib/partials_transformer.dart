@@ -9,7 +9,7 @@ import 'package:flare/flare.dart';
 
 /// Includes partials into content files. Mustache-like syntax is used.
 class PartialsTransformer extends Transformer {
-  static final _INCLUDE_RE = new RegExp(r'{{>(\s*)(.*)}}(\s*)');
+  static final _includeRE = new RegExp(r'{{>(\s*)(.*)}}(\s*)');
 
   final BarbackSettings _settings;
 
@@ -26,7 +26,7 @@ class PartialsTransformer extends Transformer {
       final List<Future> futures = [];
       final Map<String, String> partials = {};
 
-      _INCLUDE_RE.allMatches(content).forEach((match) {
+      _includeRE.allMatches(content).forEach((match) {
         final path = match.group(2);
 
         futures.add(transform.getInput(new AssetId(asset.id.package, _normalizePath(path, relativeRootPath))).then((partial) {
@@ -40,7 +40,7 @@ class PartialsTransformer extends Transformer {
       });
 
       return Future.wait(futures).then((_) {
-        final newContent = content.replaceAllMapped(_INCLUDE_RE, (match) {
+        final newContent = content.replaceAllMapped(_includeRE, (match) {
           final path = match.group(2);
           return partials[path];
         });
@@ -54,7 +54,7 @@ class PartialsTransformer extends Transformer {
   Future<bool> isPrimary(AssetId id) {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
     // TODO: also check that .inc. is not included in the path?
-    return new Future.value(TMPL_RE.hasMatch(id.path));
+    return new Future.value(tmplRE.hasMatch(id.path));
   }
 
   String _normalizePath(String path, String relativeRootPath) {

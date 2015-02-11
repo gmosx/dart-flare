@@ -1,5 +1,7 @@
 library flare.metadata_transformer;
 
+// TODO: Rename to MetadataTranslator?
+
 import 'dart:async';
 import 'dart:convert' show JSON;
 
@@ -12,7 +14,7 @@ import 'package:flare/flare.dart';
 class MetadataTransformer extends Transformer {
   final BarbackSettings _settings;
 
-  MetadataTransformer.asPlugin(this._settings) {
+  MetadataTransformer.asPlugin([this._settings]) {
   }
 
   @override
@@ -21,7 +23,7 @@ class MetadataTransformer extends Transformer {
 
     return asset.readAsString().then((yaml) {
       transform.consumePrimary();
-      transform.addOutput(new Asset.fromString(asset.id.changeExtension('.$METADATA_EXTENSION'),
+      transform.addOutput(new Asset.fromString(asset.id.changeExtension('.$metadataExtension'),
           JSON.encode(loadYaml(yaml))));
     });
   }

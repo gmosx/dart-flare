@@ -46,7 +46,7 @@ class MetadataExtractor extends Transformer {
       _addExternalMetadata(asset, data);
 
       if (data.isNotEmpty) {
-        final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$METADATA_EXTENSION");
+        final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$metadataExtension");
         transform.addOutput(new Asset.fromString(id, JSON.encode(_normalizeData(data))));
         transform.addOutput(new Asset.fromString(asset.id, content));
       }

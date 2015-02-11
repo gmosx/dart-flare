@@ -3,7 +3,7 @@
 Flare is a collection of Barback transformers for static generation of web sites,  
 similar to Jekyll, etc.
 
-## Example
+## Usage
 
 A preliminary example is [available here](https://github.com/gmosx/dart-flare_example).
 
@@ -28,6 +28,7 @@ Then you have access to a number of helper options:
 * PostsTransformer
 * MustacheTransformer
 * CleanupTransformer
+* HtmlOptimizer
 
 ## Status
 

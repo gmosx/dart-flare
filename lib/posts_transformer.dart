@@ -2,7 +2,6 @@ library flare.posts_transformer;
 
 import 'dart:io';
 import 'dart:async';
-import 'dart:convert' show JSON;
 
 import 'package:barback/barback.dart';
 
@@ -12,7 +11,7 @@ import 'package:flare/flare.dart';
 
 /// Renders a collection of posts.
 class PostsTransformer extends Transformer {
-  static final _CONTENT_RE = new RegExp(r'{{content}}');
+  static final _contentRE = new RegExp(r'{{content}}');
 
   final BarbackSettings _settings;
   String _rootPath;
@@ -32,7 +31,7 @@ class PostsTransformer extends Transformer {
     final asset = transform.primaryInput;
 
     return asset.readAsString().then((content) {
-      final newContent = _layout.replaceAll(_CONTENT_RE, content);
+      final newContent = _layout.replaceAll(_contentRE, content);
       transform.consumePrimary();
       transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
     });
@@ -41,6 +40,6 @@ class PostsTransformer extends Transformer {
   @override
   Future<bool> isPrimary(AssetId id) {
     return new Future.value((id.path.startsWith(_rootPath) &&
-        (!PRIVATE_RE.hasMatch(id.path)) && id.path.endsWith('.html')));
+        (!privateRE.hasMatch(id.path)) && id.path.endsWith('.html')));
   }
 }
