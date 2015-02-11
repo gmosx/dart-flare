@@ -47,7 +47,7 @@ void main(List<String> args) {
         break;
 
       case 'version':
-        print("Flare version 0.4.0");
+        print("Flare version 0.5.0");
         break;
     }
   } else {
