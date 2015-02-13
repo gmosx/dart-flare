@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.0
+
+
 ## 0.5.0
 
 - CLI wizard compatible with 'pub global activate'.

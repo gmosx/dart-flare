@@ -51,7 +51,12 @@ void main(List<String> args) {
         break;
     }
   } else {
-    print(parser.getUsage());
+    // TODO: better formatting needed here.
+    print("Available commands:\n");
+    parser.commands.forEach((cmd, _) {
+      print(cmd);
+    });
+    print(parser.usage);
   }
 }
 

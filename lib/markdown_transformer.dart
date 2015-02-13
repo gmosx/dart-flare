@@ -5,12 +5,11 @@ import 'dart:async';
 import 'package:barback/barback.dart';
 import 'package:markdown/markdown.dart' show markdownToHtml;
 
-/// Converts markdown files into html files.
+/// Renders markdown files into html files.
 class MarkdownTransformer extends Transformer {
   final BarbackSettings _settings;
 
-  MarkdownTransformer.asPlugin(this._settings) {
-  }
+  MarkdownTransformer.asPlugin(this._settings);
 
   @override
   apply(Transform transform) {

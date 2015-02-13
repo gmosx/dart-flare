@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 
 import 'package:barback/barback.dart';
-import 'package:mustache/mustache.dart' as mustache;
+import 'package:mustache/mustache.dart';
 
 import 'package:flare/flare.dart';
 
@@ -16,7 +16,7 @@ Map DEFAULT_METADATA = {
   'time': new DateTime.now().toString()
 };
 
-/// Evaluates [Mustache](http://mustache.github.io/) template files.
+/// Renders [Mustache](http://mustache.github.io/) template files.
 class MustacheTransformer extends Transformer {
   final BarbackSettings _settings;
 
@@ -36,9 +36,9 @@ class MustacheTransformer extends Transformer {
         }).catchError((e) {
           // No global site meta data found, consume the exception and continue.
         }).whenComplete(() {
-          final template = mustache.parse(content, lenient: true);
+          final template = new Template(content, lenient: true, htmlEscapeValues: false);
           final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-          final newContent = template.renderString(metadata, htmlEscapeValues: false);
+          final newContent = template.renderString(metadata);
           transform.addOutput(new Asset.fromString(newId, newContent));
           transform.consumePrimary();
         });
