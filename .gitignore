@@ -4,3 +4,5 @@ pubspec.lock
 packages
 .*.un~
 etc.txt
+.settings/
+.project
