@@ -1,15 +1,50 @@
 #!/usr/bin/env dart
 
-// TODO: Use the logger package.
-// TODO: Rename to flare-cli?
-
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:args/args.dart';
+import 'package:args/command_runner.dart';
 import 'package:uuid/uuid_server.dart';
 
-final DateFormat DATE_FORMAT = new DateFormat('yyyy/MM/dd');
+final DateFormat dateFormat = new DateFormat('yyyy/MM/dd');
+
+/// A [Command] that generates a persistent id for a post. 
+class GeneratePostIdCommand extends Command {
+  @override
+  String get name => 'generate-post-id';
+  
+  @override
+  String get description => "Generates a unique id for a new post";
+  
+  @override
+  void run() {
+    print(generateNewPostId());
+  }
+}
+
+/// A [Command] that creates a new (scaffold) post.
+class NewPostCommand extends Command {
+  @override
+  String get name => 'new-post';
+
+  @override
+  String get description => "Create a scaffold for a new post";
+  
+  NewPostCommand() {
+    argParser.addOption('date', abbr: 'd', help: "The creation date of the post");
+  }
+  
+  @override
+  void run() {
+    var date;
+    if (argResults['date'] != null) {
+      date = argResults['date'];
+    } else {
+      date = dateFormat.format(new DateTime.now());
+    }
+    createNewPost(argResults.rest.first, date: date);
+  }
+}
 
 /// # Examples
 ///
@@ -17,47 +52,10 @@ final DateFormat DATE_FORMAT = new DateFormat('yyyy/MM/dd');
 /// $ flare new-post "This is my new post"
 /// $ flare new-post --date=2014/08/02 "This is another post"
 void main(List<String> args) {
-  final parser = new ArgParser();
-
-  parser.addCommand('generate-post-id');
-
-  final newPost = parser.addCommand('new-post');
-  newPost.addOption('date', abbr: 'd', help: "The creation data of the post");
-
-  parser.addCommand('delete-post');
-
-  parser.addCommand('version');
-
-  final cli = parser.parse(args);
-
-  if (cli.command != null) {
-    switch (cli.command.name) {
-      case 'generate-post-id':
-        print(generateNewPostId());
-        break;
-
-      case 'new-post':
-        var date;
-        if (cli.command.wasParsed('date')) {
-          date = cli.command['date'];
-        } else {
-          date = DATE_FORMAT.format(new DateTime.now());
-        }
-        createNewPost(cli.command.rest.first, date: date);
-        break;
-
-      case 'version':
-        print("Flare version 0.5.0");
-        break;
-    }
-  } else {
-    // TODO: better formatting needed here.
-    print("Available commands:\n");
-    parser.commands.forEach((cmd, _) {
-      print(cmd);
-    });
-    print(parser.usage);
-  }
+  final runner = new CommandRunner('flare', "CLI for flare")
+      ..addCommand(new GeneratePostIdCommand())
+      ..addCommand(new NewPostCommand())
+      ..run(args);  
 }
 
 /// Generates a persistent id for a post. This id uniquely identifies the post
@@ -68,7 +66,7 @@ String generateNewPostId() {
 }
 
 /// Creates subdirectories and the file for a new post.
-void createNewPost(String title, {DateTime date}) {
+void createNewPost(String title, {String date}) {
   final dirname = 'web/posts/${date}';
   final filename = '${_slugify(title)}.md';
 
