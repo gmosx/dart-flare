@@ -1,5 +1,7 @@
 library flare;
 
+const String version = '0.6.0';
+
 const metadataExtension = 'meta.json';
 
 final privateRE = new RegExp(r'/_');

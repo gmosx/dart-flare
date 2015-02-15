@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:args/command_runner.dart';
 import 'package:uuid/uuid_server.dart';
 
+import 'package:flare/flare.dart';
+
 final DateFormat dateFormat = new DateFormat('yyyy/MM/dd');
 
 /// Displays the version of Flare.
@@ -18,7 +20,7 @@ class VersionCommand extends Command {
 
   @override
   void run() {
-    print("Flare version 0.6.0");
+    print("Flare version $version");
   }
 }
 
