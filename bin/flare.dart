@@ -8,7 +8,21 @@ import 'package:uuid/uuid_server.dart';
 
 final DateFormat dateFormat = new DateFormat('yyyy/MM/dd');
 
-/// A [Command] that generates a persistent id for a post.
+/// Displays the version of Flare.
+class VersionCommand extends Command {
+  @override
+  String get name => 'version';
+
+  @override
+  String get description => "Displays the version of Flare";
+
+  @override
+  void run() {
+    print("Flare version 0.6.0");
+  }
+}
+
+/// Generates a persistent id for a post.
 class GeneratePostIdCommand extends Command {
   @override
   String get name => 'generate-post-id';
@@ -22,7 +36,7 @@ class GeneratePostIdCommand extends Command {
   }
 }
 
-/// A [Command] that creates a new (scaffold) post.
+/// Creates a new (scaffold) post.
 class NewPostCommand extends Command {
   @override
   String get name => 'new-post';
@@ -53,9 +67,11 @@ class NewPostCommand extends Command {
 /// $ flare new-post --date=2014/08/02 "This is another post"
 void main(List<String> args) {
   final runner = new CommandRunner('flare', "CLI for flare")
+      ..addCommand(new VersionCommand())
       ..addCommand(new GeneratePostIdCommand())
-      ..addCommand(new NewPostCommand())
-      ..run(args);
+      ..addCommand(new NewPostCommand());
+
+  runner.run(args);
 }
 
 /// Generates a persistent id for a post. This id uniquely identifies the post
