@@ -8,14 +8,14 @@ import 'package:uuid/uuid_server.dart';
 
 final DateFormat dateFormat = new DateFormat('yyyy/MM/dd');
 
-/// A [Command] that generates a persistent id for a post. 
+/// A [Command] that generates a persistent id for a post.
 class GeneratePostIdCommand extends Command {
   @override
   String get name => 'generate-post-id';
-  
+
   @override
   String get description => "Generates a unique id for a new post";
-  
+
   @override
   void run() {
     print(generateNewPostId());
@@ -29,11 +29,11 @@ class NewPostCommand extends Command {
 
   @override
   String get description => "Create a scaffold for a new post";
-  
+
   NewPostCommand() {
     argParser.addOption('date', abbr: 'd', help: "The creation date of the post");
   }
-  
+
   @override
   void run() {
     var date;
@@ -55,7 +55,7 @@ void main(List<String> args) {
   final runner = new CommandRunner('flare', "CLI for flare")
       ..addCommand(new GeneratePostIdCommand())
       ..addCommand(new NewPostCommand())
-      ..run(args);  
+      ..run(args);
 }
 
 /// Generates a persistent id for a post. This id uniquely identifies the post
