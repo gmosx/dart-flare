@@ -7,13 +7,12 @@ import 'package:barback/barback.dart';
 
 import 'package:flare/flare.dart';
 
-// TODO: Add error-handling code.
+final _contentRE = new RegExp(r'{{content}}');
 
 /// Renders a collection of posts.
 class PostsTransformer extends Transformer {
-  static final _contentRE = new RegExp(r'{{content}}');
-
   final BarbackSettings _settings;
+
   String _rootPath;
   String _layoutPath;
   String _layout;
