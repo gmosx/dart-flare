@@ -8,16 +8,18 @@ import 'package:code_transformers/src/test_harness.dart';
 
 import 'package:flare/metadata_translator.dart';
 
-final _phases = [[new MetadataTranslator.asPlugin()]];
+import 'testing_utils.dart';
 
 void main() {
+  final phases = [[new MetadataTranslator.asPlugin(emptyDebugSettings)]];
+
   group("The MetadataTranslator", () {
     test("translates metadata from yaml to json", () async {
       final files = {
         'a|index.yaml': new File('resources/index.yaml').readAsStringSync()
       };
 
-      final helper = new TestHelper(_phases, files, const [])..run();
+      final helper = new TestHelper(phases, files, const [])..run();
 
       final result = JSON.decode(await helper['a|index.meta.json']);
 

@@ -11,8 +11,7 @@ class CleanupTransformer extends Transformer {
 
   final BarbackSettings _settings;
 
-  CleanupTransformer.asPlugin(this._settings) {
-  }
+  CleanupTransformer.asPlugin(this._settings);
 
   @override
   apply(Transform transform) {

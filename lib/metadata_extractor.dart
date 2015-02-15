@@ -27,11 +27,7 @@ class MetadataExtractor extends Transformer {
   String _openDelimiter;
   String _closeDelimiter;
 
-  MetadataExtractor.asPlugin([this._settings]) {
-    if (this._settings == null) {
-      this._settings = new BarbackSettings({}, BarbackMode.DEBUG);
-    }
-
+  MetadataExtractor.asPlugin(this._settings) {
     _openDelimiter = _settings.configuration.containsKey('open_delimiter') ?
         _settings.configuration['open_delimiter'] : defaultOpenDelimiter;
 

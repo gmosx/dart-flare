@@ -55,7 +55,9 @@ void visitNodes(List<dom.Node> nodes, _VisitorCallback fn) {
 /// * removing html comments
 /// * squeezing whitespace
 class HtmlOptimizer extends Transformer {
-  HtmlOptimizer.asPlugin();
+  final BarbackSettings _settings;
+
+  HtmlOptimizer.asPlugin(this._settings);
 
   @override
   apply(Transform transform) {

@@ -13,8 +13,7 @@ class PartialsTransformer extends Transformer {
 
   final BarbackSettings _settings;
 
-  PartialsTransformer.asPlugin(this._settings) {
-  }
+  PartialsTransformer.asPlugin(this._settings);
 
   @override
   apply(Transform transform) {
@@ -35,7 +34,7 @@ class PartialsTransformer extends Transformer {
             partials[path] = content;
           });
         }).catchError((_) {
-          transform.logger.error("Fragment '$path' not found!");
+          transform.logger.error("Fragment '$path' (${_normalizePath(path, relativeRootPath)}) not found!");
         }));
       });
 

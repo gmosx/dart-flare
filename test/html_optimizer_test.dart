@@ -5,9 +5,11 @@ import 'package:code_transformers/src/test_harness.dart';
 
 import 'package:flare/html_optimizer.dart';
 
-final _phases = [[new HtmlOptimizer.asPlugin()]];
+import 'testing_utils.dart';
 
 void main() {
+  final phases = [[new HtmlOptimizer.asPlugin(emptyDebugSettings)]];
+
   group("The html5_optimizer", () {
     test("removes html comments", () async {
       final files = {
@@ -25,7 +27,7 @@ void main() {
             '''
       };
 
-      final helper = new TestHelper(_phases, files, const [])..run();
+      final helper = new TestHelper(phases, files, const [])..run();
 
       final result = await helper['a|index.html'];
       expect(result, equals('<html lang="el"><head></head><body>Nice <span class="new">stuff</span> man!</body></html>'));

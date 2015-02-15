@@ -16,8 +16,7 @@ class MetadataAggregator extends AggregateTransformer {
 
   final BarbackSettings _settings;
 
-  MetadataAggregator.asPlugin(this._settings) {
-  }
+  MetadataAggregator.asPlugin(this._settings);
 
   @override
   apply(AggregateTransform transform) {
