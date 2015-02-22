@@ -1,5 +1,5 @@
 name: flare
-version: 0.6.0
+version: 0.6.1
 author: George Moschovitis <george.moschovitis@gmail.com>
 description: Flare is a set of Barback transformers that collectively implement a versatile static-site generation system.
 homepage: https://github.com/gmosx/dart-flare
