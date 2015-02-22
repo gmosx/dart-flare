@@ -32,7 +32,7 @@ bool squeezeWhitespace(dom.Node node, List<dom.Node> siblings) {
 
     if (idx == 0) {
       // Trim the leading whitespace if the text node is the first child.
-      node.text = node.text.trimLeft(); //= node.text.replaceAll(_squeezeRE2, "");
+      node.text = node.text.trimLeft();
     }
 
     if (idx == (siblings.length - 1)) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+- HtmlOptimizer ignores content within <pre> tags.
+
 ## 0.6.0
 
 - Added more settings to some transformers.
