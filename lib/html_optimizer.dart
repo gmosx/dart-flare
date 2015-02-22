@@ -6,47 +6,66 @@ import 'package:barback/barback.dart';
 import 'package:html5lib/dom.dart' as dom;
 import 'package:html5lib/parser.dart' as html_parser;
 
-typedef void _VisitorCallback(dom.Node node, List<dom.Node> nodes);
+/// Type of visitor callbacks. If the callback returns true, the visitor descends into the
+/// current node's children.
+typedef bool _VisitorCallback(dom.Node node, List<dom.Node> nodes);
 
 final RegExp _squeezeRE0 = new RegExp(r'\s+', multiLine: true);
 final RegExp _squeezeRE1 = new RegExp(r'^\s+$', multiLine: true);
 
-void squeezeWhitespace(dom.Node node, List<dom.Node> nodes) {
+bool _isPreElement(dom.Node node) {
+  // TODO: hackish way to check for <pre> element, any better solution?
+  return node is dom.Element && node.outerHtml.startsWith('<pre>');
+}
+
+bool squeezeWhitespace(dom.Node node, List<dom.Node> siblings) {
   if (node is dom.Text) {
     // Squeeze the whitespace.
     node.text = node.text.replaceAll(_squeezeRE0, " ");
 
     if (_squeezeRE1.hasMatch(node.text)) {
       // Remove whitespace-only text nodes.
-      nodes.remove(node);
+      siblings.remove(node);
     }
 
-    final idx = nodes.indexOf(node);
+    final idx = siblings.indexOf(node);
 
     if (idx == 0) {
       // Trim the leading whitespace if the text node is the first child.
       node.text = node.text.trimLeft(); //= node.text.replaceAll(_squeezeRE2, "");
     }
 
-    if (idx == (nodes.length - 1)) {
+    if (idx == (siblings.length - 1)) {
       // Trim the trailing whitespace if the text node is the last child.
       node.text = node.text.trimRight();
     }
+
+    return false;
+  } if (_isPreElement(node)) {
+    return false;
   }
+
+  return true;
 }
 
-void removeComments(dom.Node node, List<dom.Node> nodes) {
+bool removeComments(dom.Node node, List<dom.Node> siblings) {
   if (node is dom.Comment) {
-    nodes.remove(node);
+    siblings.remove(node);
+    return false;
+  } if (_isPreElement(node)) {
+    return false;
   }
+
+  return true;
 }
 
 // TODO: implement as generator/sequence.
-void visitNodes(List<dom.Node> nodes, _VisitorCallback fn) {
-  var list = new List.from(nodes);
+void visitNodes(List<dom.Node> siblings, _VisitorCallback fn) {
+  var list = new List.from(siblings);
   list.forEach((node) {
-    fn(node, nodes);
-    visitNodes(node.nodes, fn);
+    if (fn(node, siblings)) {
+      visitNodes(node.nodes, fn);
+    }
   });
 }
 
