@@ -12,14 +12,12 @@ class MarkdownTransformer extends Transformer {
   MarkdownTransformer.asPlugin(this._settings);
 
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
-
-    return asset.readAsString().then((content) {
-      transform.consumePrimary();
-      transform.addOutput(new Asset.fromString(asset.id.changeExtension('.html'),
-          markdownToHtml(content)));
-    });
+    final content = await asset.readAsString();
+    transform.consumePrimary();
+    transform.addOutput(new Asset.fromString(asset.id.changeExtension('.html'),
+        markdownToHtml(content)));
   }
 
   @override

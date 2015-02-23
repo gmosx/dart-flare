@@ -24,26 +24,22 @@ class MustacheTransformer extends Transformer {
   }
 
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
-
-    return asset.readAsString().then((content) {
-      return _loadMetadata(transform, asset).then((metadata) {
-        return transform.getInput(new AssetId(asset.id.package, 'web/__site.$metadataExtension')).then((meta) {
-          return meta.readAsString().then((json) {
-            metadata['site'] = JSON.decode(json);
-          });
-        }).catchError((e) {
-          // No global site meta data found, consume the exception and continue.
-        }).whenComplete(() {
-          final template = new Template(content, lenient: true, htmlEscapeValues: false);
-          final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
-          final newContent = template.renderString(metadata);
-          transform.addOutput(new Asset.fromString(newId, newContent));
-          transform.consumePrimary();
-        });
-      });
-    });
+    final content = await asset.readAsString();
+    final metadata = await _loadMetadata(transform, asset);
+    try {
+      final meta = await transform.getInput(new AssetId(asset.id.package, 'web/__site.$metadataExtension'));
+      final json = await meta.readAsString();
+      metadata['site'] = JSON.decode(json);
+    } catch (e) {
+      // No global site meta data found, consume the exception and continue.
+    }
+    final template = new Template(content, lenient: true, htmlEscapeValues: false);
+    final newId = new AssetId(asset.id.package, asset.id.path.replaceAll('.tmpl', ''));
+    final newContent = template.renderString(metadata);
+    transform.addOutput(new Asset.fromString(newId, newContent));
+    transform.consumePrimary();
   }
 
   @override
@@ -55,15 +51,15 @@ class MustacheTransformer extends Transformer {
   }
 
   // TODO: better merge additional metadata.
-  Future<Map> _loadMetadata(Transform transform, Asset asset) {
-    return transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$metadataExtension')).then((meta) {
-      return meta.readAsString().then((json) {
-        final metadata = JSON.decode(json);
-        metadata.addAll(DEFAULT_METADATA);
-        return metadata;
-      });
-    }).catchError((_) {
+  Future<Map> _loadMetadata(Transform transform, Asset asset) async {
+    try {
+      final meta = await transform.getInput(new AssetId(asset.id.package, '${asset.id.path.split(".").first}.$metadataExtension'));
+      final json = await meta.readAsString();
+      final metadata = JSON.decode(json);
+      metadata.addAll(DEFAULT_METADATA);
+      return metadata;
+    } catch (e) {
       return DEFAULT_METADATA;
-    });
+    }
   }
 }

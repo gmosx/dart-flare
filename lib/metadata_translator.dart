@@ -1,6 +1,5 @@
 library flare.metadata_transformer;
 
-// TODO: Rename to MetadataTranslator?
 // TODO: Reuse functionality from MetadataExtractor, e.g. normalizeData.
 
 import 'dart:async';
@@ -19,14 +18,12 @@ class MetadataTranslator extends Transformer {
   }
 
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
-
-    return asset.readAsString().then((yaml) {
-      transform.consumePrimary();
-      transform.addOutput(new Asset.fromString(asset.id.changeExtension('.$metadataExtension'),
-          JSON.encode(loadYaml(yaml))));
-    });
+    final yaml = await asset.readAsString();
+    transform.consumePrimary();
+    transform.addOutput(new Asset.fromString(asset.id.changeExtension('.$metadataExtension'),
+        JSON.encode(loadYaml(yaml))));
   }
 
   @override

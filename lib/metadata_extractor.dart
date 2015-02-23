@@ -40,21 +40,20 @@ class MetadataExtractor extends Transformer {
   }
 
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
 
-    return asset.readAsString().then((content) {
-      final data = {};
+    var content = await asset.readAsString();
+    final data = {};
 
-      content = _addFrontMatterMetadata(content, data);
-      _addExternalMetadata(asset, data);
+    content = _addFrontMatterMetadata(content, data);
+    _addExternalMetadata(asset, data);
 
-      if (data.isNotEmpty) {
-        final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$metadataExtension");
-        transform.addOutput(new Asset.fromString(id, JSON.encode(_normalizeData(data))));
-        transform.addOutput(new Asset.fromString(asset.id, content));
-      }
-    });
+    if (data.isNotEmpty) {
+      final id = new AssetId(asset.id.package, "${asset.id.path.split(".").first}.$metadataExtension");
+      transform.addOutput(new Asset.fromString(id, JSON.encode(_normalizeData(data))));
+      transform.addOutput(new Asset.fromString(asset.id, content));
+    }
   }
 
   @override

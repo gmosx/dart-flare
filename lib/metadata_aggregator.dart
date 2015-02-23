@@ -19,29 +19,27 @@ class MetadataAggregator extends AggregateTransformer {
   MetadataAggregator.asPlugin(this._settings);
 
   @override
-  apply(AggregateTransform transform) {
+  apply(AggregateTransform transform) async {
     String package;
 
     if (transform.key == _metadataKey) {
-      return transform.primaryInputs.toList().then((list) {
-        return reduceAsync(list, {'sitemap': {}}, (metadata, asset) {
-          package = asset.id.package;
-          return asset.readAsString().then((json) {
-            if (privateRE.hasMatch(asset.id.path)) {
-              metadata.addAll(JSON.decode(json));
-            } else {
-              metadata['sitemap'][asset.id.path] = JSON.decode(json);
-            }
-            return metadata;
-          });
-        });
-      }).then((metadata) {
-        metadata['update_time'] = {
-          'iso': new DateTime.now().toIso8601String()
-        };
-        final id = new AssetId(package, 'web/__site.$metadataExtension');
-        transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
+      final list = await transform.primaryInputs.toList();
+      final metadata = await list.fold({'sitemap': {}}, (metadata, asset) async {
+        final data = await metadata;
+        package = asset.id.package;
+        final json = await asset.readAsString();
+        if (privateRE.hasMatch(asset.id.path)) {
+          data.addAll(JSON.decode(json));
+        } else {
+          data['sitemap'][asset.id.path] = JSON.decode(json);
+        }
+        return data;
       });
+      metadata['update_time'] = {
+        'iso': new DateTime.now().toIso8601String()
+      };
+      final id = new AssetId(package, 'web/__site.$metadataExtension');
+      transform.addOutput(new Asset.fromString(id, JSON.encode(metadata)));
     }
   }
 
