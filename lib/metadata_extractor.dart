@@ -58,8 +58,8 @@ class MetadataExtractor extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(_contentRE.hasMatch(id.path));
+  Future<bool> isPrimary(AssetId id) async {
+    return _contentRE.hasMatch(id.path);
   }
 
   // Try to add 'front matter' metadata.

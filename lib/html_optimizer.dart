@@ -79,23 +79,23 @@ class HtmlOptimizer extends Transformer {
   HtmlOptimizer.asPlugin(this._settings);
 
   @override
-  apply(Transform transform) {
-    return transform.primaryInput.readAsString().then((content) {
-      var id = transform.primaryInput.id;
+  apply(Transform transform) async {
+    final content = await transform.primaryInput.readAsString();
 
-      final doc = html_parser.parse(content);
+    var id = transform.primaryInput.id;
 
-      visitNodes(doc.nodes, removeComments);
-      visitNodes(doc.nodes, squeezeWhitespace);
+    final doc = html_parser.parse(content);
 
-      String newContent = doc.outerHtml;
+    visitNodes(doc.nodes, removeComments);
+    visitNodes(doc.nodes, squeezeWhitespace);
 
-      transform.addOutput(new Asset.fromString(id, newContent));
-    });
+    String newContent = doc.outerHtml;
+
+    transform.addOutput(new Asset.fromString(id, newContent));
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(id.extension == '.html');
+  Future<bool> isPrimary(AssetId id) async {
+    return id.extension == '.html';
   }
 }

@@ -50,10 +50,10 @@ class PartialsTransformer extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
+  Future<bool> isPrimary(AssetId id) async {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
     // TODO: also check that .inc. is not included in the path?
-    return new Future.value(tmplRE.hasMatch(id.path));
+    return tmplRE.hasMatch(id.path);
   }
 
   String _normalizePath(String path, String relativeRootPath) {

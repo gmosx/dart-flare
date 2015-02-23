@@ -19,9 +19,9 @@ class CleanupTransformer extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(
+  Future<bool> isPrimary(AssetId id) async {
+    return
         privateRE.hasMatch(id.path) ||
-        metaRE.hasMatch(id.path));
+        metaRE.hasMatch(id.path);
   }
 }

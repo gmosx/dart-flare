@@ -47,10 +47,11 @@ class MustacheTransformer extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
+  Future<bool> isPrimary(AssetId id) async {
     // Only xxx.tmpl.yyy paths are primary assets for transformation.
-    return new Future.value(tmplRE.hasMatch(id.path) &&
-        (!privateRE.hasMatch(id.path)));
+    return
+        tmplRE.hasMatch(id.path) &&
+        (!privateRE.hasMatch(id.path));
   }
 
   // TODO: better merge additional metadata.

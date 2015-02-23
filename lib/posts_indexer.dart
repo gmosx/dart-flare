@@ -24,6 +24,7 @@ class PostsIndexer extends AggregateTransformer {
   @override
   apply(AggregateTransform transform) {
     String package;
+    Map<String, List<String>> labels = {};
 
     if (transform.key == _postsKey) {
       return transform.primaryInputs.toList().then((list) {
@@ -36,6 +37,15 @@ class PostsIndexer extends AggregateTransformer {
                 data['path'] = asset.id.path.replaceAll(_pathPrefix, ''); // TODO: temp hack.
                 data['content'] = content;
                 posts.add(data);
+
+                // TODO: extract to separate labels_indexer.
+                data['labels'].forEach((label) {
+                  if (!labels.containsKey(label)) {
+                    labels[label] = [];
+                  }
+                  labels[label].add(data['path']);
+                });
+
                 return posts;
               });
             });
@@ -45,12 +55,23 @@ class PostsIndexer extends AggregateTransformer {
         // Sort the posts by path (effectively by inverse chronological order).
         posts.sort((x, y) => y['path'].compareTo(x['path']));
 
+        final labelsList = [];
+
+        labels.forEach((title, paths) {
+          labelsList.add({
+            'title': title,
+            'count': paths.length,
+            'posts': paths
+          });
+        });
+
         // TODO: make posts count a configuration parameter!
         final metadata = {
-            'posts': {
-              'latest': posts.length > 10 ? posts.sublist(0, 10) : posts,
-              'all': posts
-            }
+          'posts': {
+            'latest': posts.length > 10 ? posts.sublist(0, 10) : posts,
+            'all': posts,
+            'labels': labelsList
+          }
         };
 
         final id = new AssetId(package, 'web/_posts.$metadataExtension');

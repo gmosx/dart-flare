@@ -23,7 +23,7 @@ class MarkdownTransformer extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(id.path.endsWith('.md'));
+  Future<bool> isPrimary(AssetId id) async {
+    return id.path.endsWith('.md');
   }
 }

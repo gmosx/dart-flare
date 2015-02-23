@@ -30,7 +30,7 @@ class MetadataTranslator extends Transformer {
   }
 
   @override
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(id.path.endsWith('.yaml'));
+  Future<bool> isPrimary(AssetId id) async {
+    return id.path.endsWith('.yaml');
   }
 }
