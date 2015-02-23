@@ -26,14 +26,13 @@ class PostsTransformer extends Transformer {
   /// The output extension is changed to *.tmpl.html so that the layout
   /// template can be evaluated by a downstream transformer.
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
 
-    return asset.readAsString().then((content) {
-      final newContent = _layout.replaceAll(_contentRE, content);
-      transform.consumePrimary();
-      transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
-    });
+    final content = await asset.readAsString();
+    final newContent = _layout.replaceAll(_contentRE, content);
+    transform.consumePrimary();
+    transform.addOutput(new Asset.fromString(asset.id.changeExtension('.tmpl.html'), newContent));
   }
 
   @override

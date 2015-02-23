@@ -16,37 +16,34 @@ class PartialsTransformer extends Transformer {
   PartialsTransformer.asPlugin(this._settings);
 
   @override
-  apply(Transform transform) {
+  apply(Transform transform) async {
     final asset = transform.primaryInput;
 
     final relativeRootPath = posix.dirname(asset.id.path);
 
-    return asset.readAsString().then((content) {
-      final List<Future> futures = [];
-      final Map<String, String> partials = {};
+    final content = await asset.readAsString();
+    final List<Future> futures = [];
+    final Map<String, String> partials = {};
 
-      _includeRE.allMatches(content).forEach((match) {
-        final path = match.group(2);
+    _includeRE.allMatches(content).forEach((match) {
+      final path = match.group(2);
 
-        futures.add(transform.getInput(new AssetId(asset.id.package, _normalizePath(path, relativeRootPath))).then((partial) {
-          // TODO: cache partials between invocations.
-          return partial.readAsString().then((content) {
-            partials[path] = content;
-          });
-        }).catchError((_) {
-          transform.logger.error("Fragment '$path' (${_normalizePath(path, relativeRootPath)}) not found!");
-        }));
-      });
-
-      return Future.wait(futures).then((_) {
-        final newContent = content.replaceAllMapped(_includeRE, (match) {
-          final path = match.group(2);
-          return partials[path];
-        });
-
-        transform.addOutput(new Asset.fromString(asset.id, newContent));
-      });
+      futures.add(transform.getInput(new AssetId(asset.id.package, _normalizePath(path, relativeRootPath))).then((partial) async {
+        // TODO: cache partials between invocations.
+        final content = await partial.readAsString();
+        partials[path] = content;
+      }).catchError((_) {
+        transform.logger.error("Fragment '$path' (${_normalizePath(path, relativeRootPath)}) not found!");
+      }));
     });
+
+    await Future.wait(futures);
+    final newContent = content.replaceAllMapped(_includeRE, (match) {
+      final path = match.group(2);
+      return partials[path];
+    });
+
+    transform.addOutput(new Asset.fromString(asset.id, newContent));
   }
 
   @override
