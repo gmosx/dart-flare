@@ -5,7 +5,6 @@ import 'dart:convert' show JSON;
 import 'package:barback/barback.dart';
 import 'package:barback/src/transformer/aggregate_transform.dart';
 import 'package:barback/src/transformer/aggregate_transformer.dart';
-import 'package:quiver/async.dart';
 
 import 'package:flare/flare.dart';
 
@@ -24,16 +23,16 @@ class MetadataAggregator extends AggregateTransformer {
 
     if (transform.key == _metadataKey) {
       final list = await transform.primaryInputs.toList();
-      final metadata = await list.fold({'sitemap': {}}, (metadata, asset) async {
-        final data = await metadata;
+      final metadata = await list.fold({'sitemap': {}}, (acc, asset) async {
+        final metadata = await acc;
         package = asset.id.package;
         final json = await asset.readAsString();
         if (privateRE.hasMatch(asset.id.path)) {
-          data.addAll(JSON.decode(json));
+          metadata.addAll(JSON.decode(json));
         } else {
-          data['sitemap'][asset.id.path] = JSON.decode(json);
+          metadata['sitemap'][asset.id.path] = JSON.decode(json);
         }
-        return data;
+        return metadata;
       });
       metadata['update_time'] = {
         'iso': new DateTime.now().toIso8601String()
